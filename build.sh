@@ -6,7 +6,8 @@ if [ ! -d "build" ]; then
 fi
 
 cd build
-cmake -DCMAKE_BUILD_TYPE=Debug \
+cmake -G "Unix Makefiles" \
+  -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
   ..
-make -j16
+cmake --build . -j16
