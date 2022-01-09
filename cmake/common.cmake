@@ -16,7 +16,7 @@ set(BASE_DIR ${CMAKE_SOURCE_DIR})
 set(INC_DIR ${CMAKE_SOURCE_DIR}/inc)
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_SOURCE_DIR}/test)
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/3rd-party/install/)
+# set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/3rd-party/install/)
 
 # for find_xxx functions
 # list(APPEND CMAKE_PREFIX_PATH $ENV{CONDA_PREFIX})

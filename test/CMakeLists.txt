@@ -20,7 +20,7 @@ message(STATUS "googletest_BINARY_DIR = ${googletest_BINARY_DIR}")
 add_custom_target(install_googletest ALL
   COMMAND ${CMAKE_COMMAND} -P cmake_install.cmake
   WORKING_DIRECTORY ${googletest_BINARY_DIR}
-  DEPENDS gtest)
+  DEPENDS gtest gtest_main gmock gmock_main)
 
 # fetch and compile and install benchmark
 FetchContent_Declare(
@@ -40,7 +40,7 @@ message(STATUS "benchmark_BINARY_DIR = ${benchmark_BINARY_DIR}")
 add_custom_target(install_benchmark ALL
   COMMAND ${CMAKE_COMMAND} -P cmake_install.cmake
   WORKING_DIRECTORY ${benchmark_BINARY_DIR}
-  DEPENDS benchmark benchmark_main gmock gmock_main)
+  DEPENDS benchmark benchmark_main)
 
 aux_source_directory(. SRCS)
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR} SRCS: ${SRCS}")
