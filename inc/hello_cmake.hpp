@@ -1,7 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <string>
+#include "std_inc.hpp"
 
 class HelloCMake {
  public:
