@@ -16,30 +16,30 @@ class RefCount {
   bool is_zero() const { return cnt_ == 0; }
 };
 
-template<typename T>
-class IntrusivePtr {
+template <typename T>
+class intrusive_ptr {
  private:
   T* ptr_;
 
  public:
-  IntrusivePtr() noexcept : ptr_(nullptr) {}
-  IntrusivePtr(T* ptr) noexcept : ptr_(ptr) { ptr_->increase(); }
-  IntrusivePtr(const IntrusivePtr<T>& other) noexcept : ptr_(other.ptr_) {
+  intrusive_ptr() noexcept : ptr_(nullptr) {}
+  intrusive_ptr(T* ptr) noexcept : ptr_(ptr) { ptr_->increase(); }
+  intrusive_ptr(const intrusive_ptr<T>& other) noexcept : ptr_(other.ptr_) {
     ptr_->increase();
   }
-  IntrusivePtr(IntrusivePtr<T>&& other) noexcept : ptr_(other.ptr_) {
+  intrusive_ptr(intrusive_ptr<T>&& other) noexcept : ptr_(other.ptr_) {
     other.ptr_ = nullptr;
   }
-  IntrusivePtr<T>& operator=(const IntrusivePtr<T>& other) noexcept {
+  intrusive_ptr<T>& operator=(const intrusive_ptr<T>& other) noexcept {
     if (ptr_ == other.ptr_) return *this;
     ptr_->increase();
     return *this;
   }
-  IntrusivePtr<T>& operator=(IntrusivePtr<T>&& other) noexcept {
+  intrusive_ptr<T>& operator=(intrusive_ptr<T>&& other) noexcept {
     std::swap(ptr_, other.ptr_);
     return *this;
   }
-  ~IntrusivePtr() {
+  ~intrusive_ptr() {
     if (ptr_) {
       ptr_->decrease();
       if (ptr_->is_zero()) {

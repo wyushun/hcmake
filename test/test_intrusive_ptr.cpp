@@ -10,7 +10,7 @@ class Foo : public RefCount {
 };
 
 int main(int argc, char **argv) {
-  IntrusivePtr<Foo> foo(new Foo());
+  intrusive_ptr<Foo> foo(new Foo());
 
   foo->print_rc();
 
