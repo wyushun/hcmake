@@ -18,6 +18,12 @@ set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_SOURCE_DIR}/test)
 # set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/3rd-party/install/)
 
+include_directories(/home/wangyushun/OneFlow-Inc/oneflow_debug)
+include_directories(/home/wangyushun/OneFlow-Inc/oneflow_debug/build)
+include_directories(/home/wangyushun/OneFlow-Inc/oneflow_debug/tools/cfg/include)
+link_directories(/home/wangyushun/OneFlow-Inc/oneflow_debug/build/liboneflow_cpp/lib)
+
+
 # for find_xxx functions
 # list(APPEND CMAKE_PREFIX_PATH $ENV{CONDA_PREFIX})
 # list(APPEND CMAKE_PREFIX_PATH $ENV{HOME}/.local/)

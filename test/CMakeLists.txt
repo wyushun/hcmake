@@ -56,7 +56,7 @@ foreach(F ${SRCS})
   message(STATUS "Building ELF target: ${ELF}")
 
   target_sources(${ELF} PRIVATE ${F})
-  target_link_libraries(${ELF} PUBLIC benchmark gtest hcmake pthread)
+  target_link_libraries(${ELF} PUBLIC oneflow benchmark gtest hcmake pthread)
   target_include_directories(${ELF} PRIVATE ${INC_DIR})
   # target_compile_options(${ELF} PRIVATE -Wall -Werror -Wextra)
 endforeach()
