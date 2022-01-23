@@ -9,7 +9,7 @@ cmake \
   -S ${SOUCE_DIR} \
   -B ${BUILD_DIR} \
   -G "Unix Makefiles" \
-  -DCMAKE_BUILD_TYPE=Debug \
+  -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
   ..
