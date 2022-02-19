@@ -1,4 +1,6 @@
 #include "registry.hpp"
+#include "derived1.hpp"
+#include "derived2.hpp"
 
 int main(int argc, char **argv) {
   auto f = Registry::Global().GetCreator("Derived1");

@@ -2,22 +2,14 @@
 
 #include "std_inc.hpp"
 
-struct Base {
-  virtual ~Base() = default;
-  virtual void foo() = 0;
-};
-
-struct Derived1 : public Base {
-  virtual void foo() override final;
-};
-
-struct Derived2 : public Base {
-  virtual void foo() override final;
-};
+class Base;
 
 using MyCreator = std::function<unique_ptr<Base>()>;
 struct Registry {
-  static Registry &Global();
+  static Registry &Global() {
+    static Registry r;
+    return r;
+  }
 
   Registry &Register(const string &name, MyCreator creator) {
     m_[name] = creator;
