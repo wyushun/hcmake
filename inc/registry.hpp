@@ -18,10 +18,17 @@ struct Derived2 : public Base {
 using MyCreator = std::function<unique_ptr<Base>()>;
 struct Registry {
   static Registry &Global();
+
   Registry &Register(const string &name, MyCreator creator) {
     m_[name] = creator;
     return *this;
   }
+
+  MyCreator GetCreator(const string& name) const {
+    CHECK(m_.find(name) != m_.end());
+    return m_.at(name);
+  }
+
 private:
   map<string, MyCreator> m_;
 };
