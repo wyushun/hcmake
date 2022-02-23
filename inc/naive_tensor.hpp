@@ -59,7 +59,8 @@ class NaiveTensor {
     rlt.resize(elem_num_);
     for (auto i = 0; i < elem_num_; i++) {
       auto new_coord = addr_to_coord(new_stride, i);
-      vector<int> old_coord(ndim_, 0);
+      vector<int> old_coord;
+      old_coord.resize(ndim_);
       for (auto j = 0; j < ndim_; j++) {
         old_coord[dim_order[j]] = new_coord[j];
       }
@@ -85,8 +86,8 @@ private:
 
   vector<int> addr_to_coord(const vector<int>& stride, int pos) const {
     auto remainder = pos;
-    vector<int> coord(stride.size(), 0);
-    for(int i=stride.size()-1; i>=0; i--) {
+    vector<int> coord(ndim_, 0);
+    for (auto i = 0; i < ndim_; i++) {
       if(remainder == 0) break;
       coord[i] = remainder / stride[i];
       remainder = remainder % stride[i];
