@@ -14,9 +14,9 @@ using namespace std;
 // 1. use vector<int> to indicate shape, suppose it's valid and hasn't negative integers
 // 2. data_ contents will be [0, elem_num)
 // 3. stride_ means each dimension's memory size
-class Tensor {
-public:
-  Tensor(const vector<int>& shape) : shape_(shape) {
+class NaiveTensor {
+ public:
+  NaiveTensor(const vector<int>& shape) : shape_(shape) {
     elem_num_ = std::accumulate(shape_.begin(), shape_.end(), int(1),
                                 [](int a, int b) { return a * b; });
     stride_.resize(shape_.size());

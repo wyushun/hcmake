@@ -1,7 +1,8 @@
-#include "std_inc.hpp"
-#include "tensor.hpp"
+#include "naive_tensor.hpp"
 
-void Tensor::Print() {
+#include "std_inc.hpp"
+
+void NaiveTensor::Print() {
   ostringstream oss;
 
   oss << "shape: [";
@@ -25,7 +26,7 @@ void Tensor::Print() {
   cout << oss.str() << endl;
 }
 
-void Tensor::PrintData() {
+void NaiveTensor::PrintData() {
   ostringstream oss;
 
   oss << "data size: " << data_.size() << "\n";

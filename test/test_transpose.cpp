@@ -1,8 +1,8 @@
+#include "naive_tensor.hpp"
 #include "std_inc.hpp"
-#include "tensor.hpp"
 
 int main(int argc, char **argv) {
-  auto t = make_unique<Tensor>(vector<int>{2, 10});
+  auto t = make_unique<NaiveTensor>(vector<int>{2, 10});
   t->Print();
   t->PrintData();
 
