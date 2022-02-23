@@ -17,9 +17,10 @@ using namespace std;
 class NaiveTensor {
  public:
   NaiveTensor(const vector<int>& shape) : shape_(shape) {
+    ndim_ = shape_.size();
     elem_num_ = std::accumulate(shape_.begin(), shape_.end(), int(1),
                                 [](int a, int b) { return a * b; });
-    stride_.resize(shape_.size());
+    stride_.resize(ndim_);
 
     // initialize stride value according to shape
     auto factor = 1;
@@ -38,17 +39,17 @@ class NaiveTensor {
   void Print();
   void PrintData();
 
-  void NaiveTranspose(const vector<int>& new_order) {
+  void NaiveTranspose(const vector<int>& dim_order) {
     // get new shape and new stirde
     vector<int> new_shape;
-    for(auto i=0u; i<new_order.size(); i++) {
-      new_shape.push_back(shape_[new_order[i]]);
+    for (auto i = 0; i < ndim_; i++) {
+      new_shape.push_back(shape_[dim_order[i]]);
     }
     if(shape_ == new_shape) { return; }
     vector<int> new_stride;
-    new_stride.resize(new_order.size());
+    new_stride.resize(ndim_);
     auto factor = 1;
-    for(int i=new_shape.size()-1; i>=0; i--) {
+    for (int i = ndim_ - 1; i >= 0; i--) {
       factor *= new_shape[i];
       new_stride[i] = factor / new_shape[i];
     }
@@ -58,9 +59,9 @@ class NaiveTensor {
     rlt.resize(elem_num_);
     for (auto i = 0; i < elem_num_; i++) {
       auto new_coord = addr_to_coord(new_stride, i);
-      vector<int> old_coord(new_coord.size(), 0);
-      for (auto j = 0u; j < old_coord.size(); j++) {
-        old_coord[j] = new_coord[new_order[j]];
+      vector<int> old_coord(ndim_, 0);
+      for (auto j = 0; j < ndim_; j++) {
+        old_coord[dim_order[j]] = new_coord[j];
       }
 
       auto old_pos = coord_to_addr(stride_, old_coord);
@@ -94,6 +95,7 @@ private:
   }
 
 private:
+ int ndim_;
  int elem_num_;
  vector<int> shape_;
  vector<int> stride_;
