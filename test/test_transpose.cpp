@@ -3,7 +3,10 @@
 
 int main(int argc, char **argv) {
   auto t = make_unique<Tensor>(vector<int>{2, 10});
-  t->print();
-  t->print_data();
+  t->Print();
+  t->PrintData();
+
+  t->NaiveTranspose(vector<int>{1, 0});
+  t->PrintData();
   return 0;
 }
