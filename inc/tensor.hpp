@@ -17,8 +17,8 @@ using namespace std;
 class Tensor {
 public:
   Tensor(const vector<int>& shape) : shape_(shape) {
-    num_ = std::accumulate(shape_.begin(), shape_.end(), int(1),
-            [](int a, int b) {return a*b;});
+    elem_num_ = std::accumulate(shape_.begin(), shape_.end(), int(1),
+                                [](int a, int b) { return a * b; });
     stride_.resize(shape_.size());
 
     // initialize stride value according to shape
@@ -30,7 +30,7 @@ public:
 
     // initialize data value
     auto cnt = 0;
-    data_.resize(num_);
+    data_.resize(elem_num_);
     std::transform(data_.begin(), data_.end(), data_.begin(),
             [&cnt](int value) { return (value = cnt++); });
   }
@@ -46,6 +46,7 @@ public:
     }
     if(shape_ == new_shape) { return; }
     vector<int> new_stride;
+    new_stride.resize(new_order.size());
     auto factor = 1;
     for(int i=new_shape.size()-1; i>=0; i--) {
       factor *= new_shape[i];
@@ -54,16 +55,16 @@ public:
 
     // do transpose
     vector<int> rlt;
-    rlt.resize(num_);
-    for(auto i=0; i<num_; i++) {
-        auto new_coord = addr_to_coord(new_stride, i);
-        vector<int> old_coord(new_coord.size(), 0);
-        for(auto j=0u; j<old_coord.size(); j++) {
-          old_coord[j] = new_coord[new_order[j]];
-        }
+    rlt.resize(elem_num_);
+    for (auto i = 0; i < elem_num_; i++) {
+      auto new_coord = addr_to_coord(new_stride, i);
+      vector<int> old_coord(new_coord.size(), 0);
+      for (auto j = 0u; j < old_coord.size(); j++) {
+        old_coord[j] = new_coord[new_order[j]];
+      }
 
-        auto old_pos = coord_to_addr(stride_, old_coord);
-        rlt[i] = data_[old_pos];
+      auto old_pos = coord_to_addr(stride_, old_coord);
+      rlt[i] = data_[old_pos];
     }
 
     // update data
@@ -93,8 +94,8 @@ private:
   }
 
 private:
-  int num_;
-  vector<int> shape_;
-  vector<int> stride_;
-  vector<int> data_;
+ int elem_num_;
+ vector<int> shape_;
+ vector<int> stride_;
+ vector<int> data_;
 };
