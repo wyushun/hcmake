@@ -1,84 +1,62 @@
-#include "std_inc.hpp"
+#include "vector_iterator.hpp"
 
 template <typename T, typename Alloc = std::allocator<T>>
 class SimpleVector {
  public:
-  SimpleVector(const Alloc& alloc = Alloc()) : allocator_(alloc) {
-    first_.ptr_ = nullptr;
-    last_.ptr_ = nullptr;
-    end_.ptr_ = nullptr;
-  }
+  SimpleVector(const Alloc& alloc = Alloc())
+      : start_(nullptr),
+        finish_(nullptr),
+        end_of_storage_(nullptr),
+        allocator_(alloc) {}
+  ~SimpleVector() = default;
 
-  void push_back(T&& val) {
-    if (full()) resize();
-    allocator_.construct(last_.ptr_, std::forward<T>(val));
-    last_.ptr_++;
+  void push_back(T&& value) {
+    if (end_of_storage_ == nullptr || finish_ == end_of_storage_) {
+      resize();
+    }
+    allocator_.construct(finish_, std::forward<T>(value));
+    finish_++;
   }
-
   void pop_back() {
     if (empty()) return;
-    last_.ptr_--;
-    allocator_.destroy(last_.ptr_);
+    finish_--;
+    allocator_.destroy(finish_);
   }
 
-  bool full() const { return last_.ptr_ == end_.ptr_; }
-  bool empty() const { return first_.ptr_ == last_.ptr_; }
-  uint32_t size() const { return last_.ptr_ - first_.ptr_; }
-  T& operator[](int idx) {
-    CHECK(idx < size());
-    return first_.ptr_[idx];
-  }
-  const T& operator[](int idx) const {
-    CHECK(idx < size());
-    return first_.ptr_[idx];
-  }
+  bool empty() const { return start_ == finish_; }
+  int size() const { return finish_ - start_; }
+  T& operator[](int idx) { return start_[idx]; }
+  const T& operator[](int idx) const { return start_[idx]; }
 
-  class iterator {
-   public:
-    friend class SimpleVector;
-    iterator(T* ptr = nullptr) : ptr_(ptr) {}
-    iterator& operator++() {
-      ptr_++;
-      return *this;
-    }
-    iterator operator++(int) {
-      iterator tmp(ptr_);
-      ptr_++;
-      return tmp;
-    }
-    bool operator!=(const iterator& it) { return ptr_ != it.ptr_; }
-    T& operator*() { return *ptr_; }
-    T* operator->() { return ptr_; }
-
-   private:
-    T* ptr_;
-  };
-  iterator begin() { return iterator(first_.ptr_); }
-  iterator end() { return iterator(last_.ptr_); }
+  VectorIterator<T> begin() { return VectorIterator<T>(start_); }
+  VectorIterator<T> end() { return VectorIterator<T>(finish_); }
 
  private:
   void resize() {
-    if (first_.ptr_ == nullptr) {
-      first_.ptr_ = allocator_.allocate(1);
-      last_.ptr_ = first_.ptr_;
-      end_.ptr_ = first_.ptr_ + 1;
+    if (start_ == nullptr) {
+      start_ = allocator_.allocate(8);
+      finish_ = start_;
+      end_of_storage_ = start_ + 8;
     } else {
-      int size = last_.ptr_ - first_.ptr_;
-      T* ptmp = allocator_.allocate(2 * size);
-      for (int i = 0; i < size; ++i) {
-        allocator_.construct(ptmp + i, first_.ptr_[i]);
-        allocator_.destroy(first_.ptr_ + i);
+      auto n = size();
+
+      T* ptmp = allocator_.allocate(2 * n);
+      for (auto i = 0; i < n; ++i) {
+        allocator_.construct(ptmp + i, start_[i]);
+        allocator_.destroy(start_ + i);
       }
-      allocator_.deallocate(first_.ptr_, size);
-      first_.ptr_ = ptmp;
-      last_.ptr_ = first_.ptr_ + size;
-      end_.ptr_ = first_.ptr_ + 2 * size;
+      allocator_.deallocate(start_, n);
+
+      start_ = ptmp;
+      finish_ = ptmp + n;
+      end_of_storage_ = ptmp + 2 * n;
     }
   }
 
  private:
-  iterator first_;
-  iterator last_;
-  iterator end_;
+  T* start_;
+  T* finish_;
+  T* end_of_storage_;
+
   Alloc allocator_;
 };
