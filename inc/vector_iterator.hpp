@@ -33,3 +33,6 @@ class VectorIterator {
  private:
   T* ptr_;
 };
+
+template <typename T>
+using ConstVectorIterator = VectorIterator<const T>;

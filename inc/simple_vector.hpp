@@ -25,11 +25,24 @@ class SimpleVector {
 
   bool empty() const { return start_ == finish_; }
   int size() const { return finish_ - start_; }
+  int capacity() const { return end_of_storage_ - start_; }
   T& operator[](int idx) { return start_[idx]; }
   const T& operator[](int idx) const { return start_[idx]; }
+  T& at(int idx) {
+    CHECK(idx < size());
+    return start_[idx];
+  }
+  const T& at(int idx) const {
+    CHECK(idx < size());
+    return start_[idx];
+  }
 
   VectorIterator<T> begin() { return VectorIterator<T>(start_); }
   VectorIterator<T> end() { return VectorIterator<T>(finish_); }
+  ConstVectorIterator<T> begin() const {
+    return ConstVectorIterator<T>(start_);
+  }
+  ConstVectorIterator<T> end() const { return ConstVectorIterator<T>(finish_); }
 
  private:
   void resize() {
