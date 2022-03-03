@@ -1,9 +1,7 @@
-# use FetchContent to git clone and compile gtest and benchmark
-include(FetchContent)
-include(ExternalProject)
-set(FETCHCONTENT_QUIET off)
 
+# -------------------------------------------------------------------
 # fetch and compile and install googletest
+# -------------------------------------------------------------------
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY git@github.com:google/googletest.git
@@ -22,7 +20,9 @@ add_custom_target(install_googletest ALL
   WORKING_DIRECTORY ${googletest_BINARY_DIR}
   DEPENDS gtest gtest_main gmock gmock_main)
 
+# -------------------------------------------------------------------
 # fetch and compile and install benchmark
+# -------------------------------------------------------------------
 FetchContent_Declare(
   benchmark
   GIT_REPOSITORY git@github.com:google/benchmark.git
@@ -47,7 +47,9 @@ message(STATUS "${CMAKE_CURRENT_SOURCE_DIR} SRCS: ${SRCS}")
 add_custom_target(install_3rd_party ALL 
   DEPENDS install_googletest install_benchmark)
 
+# -------------------------------------------------------------------
 # build targets according to test file's name
+# -------------------------------------------------------------------
 foreach(F ${SRCS})
   get_filename_component(F_PREFIX ${F} NAME_WE)
   set(ELF ${F_PREFIX})

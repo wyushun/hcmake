@@ -1,17 +1,28 @@
+# -------------------------------------------------------------------
 # options and definitions
+# -------------------------------------------------------------------
 option(USE_LOG "record running log" OFF)
 if(USE_LOG)
   add_definitions(-DUSE_LOG)
 endif()
 
+# use FetchContent to git clone and compile gtest and benchmark
+include(FetchContent)
+include(ExternalProject)
+set(FETCHCONTENT_QUIET off)
+
+# -------------------------------------------------------------------
 # compiler related
+# -------------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -ggdb -O0")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wall -O2")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -ggdb -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O2")
 
-# global vars
+# -------------------------------------------------------------------
+# general vars
+# -------------------------------------------------------------------
 set(BASE_DIR ${CMAKE_SOURCE_DIR})
 set(INC_DIR ${CMAKE_SOURCE_DIR}/inc)
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
@@ -25,9 +36,9 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
 message(STATUS "CMAKE_PREFIX_PATH = ${CMAKE_PREFIX_PATH}")
 message(STATUS "CMAKE_SYSTEM_PREFIX_PATH = ${CMAKE_SYSTEM_PREFIX_PATH}")
 
-# use two methods to find glog and protobuf library for whole project use
-# 1. find_library and find_path
-# 2. find_package
+# -------------------------------------------------------------------
+# use find_library and find_path to find glog
+# -------------------------------------------------------------------
 find_library(GLOG_LIBRARY
   NAMES glog
   # PATHS ${SELF_DEFINED_PATH}
@@ -46,6 +57,9 @@ message(STATUS "GLOG_LIB_PATH = ${GLOG_LIB_PATH}")
 message(STATUS "GLOG_INCLUDE_DIR = ${GLOG_INCLUDE_DIR}")
 message(STATUS "GLOG_INCLUDE_PATH = ${GLOG_INCLUDE_PATH}")
 
+# -------------------------------------------------------------------
+# use find_package to find protobuf
+# -------------------------------------------------------------------
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX})
 find_package(Protobuf REQUIRED)
 if(Protobuf_FOUND)
@@ -58,7 +72,9 @@ else()
   message(FATAL_ERROR "Protobuf library not found")
 endif()
 
+# -------------------------------------------------------------------
 # define some test or global functions
+# -------------------------------------------------------------------
 function(print_cache_vars)
   message(STATUS "ARGC: ${ARGC}")
   message(STATUS "ARGV: ${ARGV}")
@@ -94,7 +110,9 @@ function(include_dir dir)
   endif()
 endfunction()
 
+# -------------------------------------------------------------------
 # make a target to do clang-format
+# -------------------------------------------------------------------
 file(GLOB_RECURSE HCMAKE_SRCS ${INC_DIR}/*.[ch]pp ${SRC_DIR}/*.[ch]pp ${TEST_DIR}/*.[ch]pp)
 message(STATUS "hcmake project's SRCS: ${HCMAKE_SRCS}")
 add_custom_target(format COMMAND clang-format --verbose -i ${HCMAKE_SRCS})
