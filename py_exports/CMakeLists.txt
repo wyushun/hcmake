@@ -24,6 +24,6 @@ add_custom_target(install_pybind11 ALL
 # -------------------------------------------------------------------
 # build pybind11 exported modules
 # -------------------------------------------------------------------
-pybind11_add_module(py_exports py_math.cpp)
-target_compile_features(py_exports PUBLIC cxx_std_14)
-set_target_properties(py_exports PROPERTIES SUFFIX ".so")
+pybind11_add_module(py_math py_math.cpp)
+target_compile_features(py_math PUBLIC cxx_std_14)
+set_target_properties(py_math PROPERTIES SUFFIX ".so")
