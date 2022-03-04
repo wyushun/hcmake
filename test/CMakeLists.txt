@@ -12,10 +12,9 @@ if(NOT googletest_POPULATED)
   FetchContent_Populate(googletest)
   add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 endif()
-FetchContent_MakeAvailable(googletest)
 message(STATUS "googletest_SOURCE_DIR = ${googletest_SOURCE_DIR}")
 message(STATUS "googletest_BINARY_DIR = ${googletest_BINARY_DIR}")
-add_custom_target(install_googletest ALL
+add_custom_command(OUTPUT install_googletest
   COMMAND ${CMAKE_COMMAND} -P cmake_install.cmake
   WORKING_DIRECTORY ${googletest_BINARY_DIR}
   DEPENDS gtest gtest_main gmock gmock_main)
@@ -34,17 +33,16 @@ if(NOT benchmark)
   FetchContent_Populate(benchmark)
   add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
 endif()
-FetchContent_MakeAvailable(benchmark)
 message(STATUS "benchmark_SOURCE_DIR = ${benchmark_SOURCE_DIR}")
 message(STATUS "benchmark_BINARY_DIR = ${benchmark_BINARY_DIR}")
-add_custom_target(install_benchmark ALL
+add_custom_command(OUTPUT install_benchmark
   COMMAND ${CMAKE_COMMAND} -P cmake_install.cmake
   WORKING_DIRECTORY ${benchmark_BINARY_DIR}
   DEPENDS benchmark benchmark_main)
 
 aux_source_directory(. SRCS)
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR} SRCS: ${SRCS}")
-add_custom_target(install_3rd_party ALL 
+add_custom_target(install_3rd_party ALL
   DEPENDS install_googletest install_benchmark)
 
 # -------------------------------------------------------------------

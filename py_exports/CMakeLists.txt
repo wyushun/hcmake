@@ -8,11 +8,6 @@ FetchContent_Declare(
   GIT_TAG v2.9.1
   GIT_SHALLOW TRUE
 )
-FetchContent_GetProperties(pybind11)
-if(NOT pybind11_POPULATED)
-  FetchContent_Populate(pybind11)
-  add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
-endif()
 FetchContent_MakeAvailable(pybind11)
 message(STATUS "pybind11_SOURCE_DIR = ${pybind11_SOURCE_DIR}")
 message(STATUS "pybind11_BINARY_DIR = ${pybind11_BINARY_DIR}")
