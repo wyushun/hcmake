@@ -115,4 +115,5 @@ endfunction()
 # -------------------------------------------------------------------
 file(GLOB_RECURSE HCMAKE_SRCS ${INC_DIR}/*.[ch]pp ${SRC_DIR}/*.[ch]pp ${TEST_DIR}/*.[ch]pp)
 message(STATUS "hcmake project's SRCS: ${HCMAKE_SRCS}")
-add_custom_target(format COMMAND clang-format --verbose -i ${HCMAKE_SRCS})
+add_custom_target(format ALL)
+add_custom_command(TARGET format PRE_BUILD COMMAND clang-format --verbose -i ${HCMAKE_SRCS})

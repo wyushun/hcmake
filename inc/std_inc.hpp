@@ -3,6 +3,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <getopt.h>
+#include <glog/logging.h>
 #include <pwd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -48,8 +49,6 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-
-#include <glog/logging.h>
 
 using std::cerr;
 using std::cin;
