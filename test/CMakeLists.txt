@@ -6,6 +6,7 @@ FetchContent_Declare(
   googletest
   GIT_REPOSITORY git@github.com:google/googletest.git
   GIT_TAG release-1.11.0
+  GIT_SHALLOW TRUE
 )
 FetchContent_GetProperties(googletest)
 if(NOT googletest_POPULATED)
@@ -26,6 +27,7 @@ FetchContent_Declare(
   benchmark
   GIT_REPOSITORY git@github.com:google/benchmark.git
   GIT_TAG v1.6.0
+  GIT_SHALLOW TRUE
 )
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
 FetchContent_GetProperties(benchmark)
