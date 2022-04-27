@@ -5,7 +5,8 @@ set(PYBIND11_INSTALL ON)
 set(PYBIND11_TEST ON)
 FetchContent_Declare(
   pybind11
-  GIT_REPOSITORY git@github.com:pybind/pybind11.git
+  # GIT_REPOSITORY git@github.com:pybind/pybind11.git
+  GIT_REPOSITORY https://github.com/pybind/pybind11.git
   GIT_TAG v2.9.1
   GIT_SHALLOW TRUE
 )
