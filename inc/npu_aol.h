@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 /*
  * define NPU AOL status code
  */
