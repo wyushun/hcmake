@@ -33,15 +33,15 @@ unsigned long align_for_page_size(unsigned long size) {
 
 /* Attach NPU device and other IPs.
  * Input:
- *     num - npu core number: 0 - 3
+ *     id - npu core id: 0 - 3
  *     mode - Conventional the NPU scheduling mode. Only
  * NPU_SCHEDULE_MODE_SINGLE used currently. Return: The device handle that the
  * subsequent function needs to usd.
  */
-npu_aol_dev_handle_t *npu_aol_attach(uint8_t num, uint32_t mode) {
+npu_aol_dev_handle_t *npu_aol_attach(uint8_t id, uint32_t mode) {
   int fd;
   int ret;
-  char device_name_buf[32];
+  char device_name_buf[64];
 
   npu_aol_linux_t *p = NULL;
 
@@ -52,7 +52,7 @@ npu_aol_dev_handle_t *npu_aol_attach(uint8_t num, uint32_t mode) {
   p = (npu_aol_linux_t *)malloc(sizeof(npu_aol_linux_t));
   memset(p, 0, sizeof(npu_aol_linux_t));
 
-  snprintf(device_name_buf, sizeof(device_name_buf), "%s%d", NPU_DEV_NAME, num);
+  snprintf(device_name_buf, sizeof(device_name_buf), "%s%d", NPU_DEV_NAME, id);
 
   fd = open(device_name_buf, O_RDWR | O_SYNC, 0);
   if (fd < 0) {

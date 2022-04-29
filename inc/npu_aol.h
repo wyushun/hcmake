@@ -105,7 +105,7 @@ typedef struct {
  * subsequent function needs to usd.
  */
 #define NPU_SCHEDULE_MODE_SINGLE 1
-npu_aol_dev_handle_t *npu_aol_attach(uint8_t num, uint32_t mode);
+npu_aol_dev_handle_t *npu_aol_attach(uint8_t id, uint32_t mode);
 
 /* Detach NPU device and other IPs.
  * Input:
