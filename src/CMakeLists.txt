@@ -1,7 +1,7 @@
 # set target
 set(NPU_LIB "npu")
 add_library(${NPU_LIB} SHARED)
-add_dependencies(${NPU_LIB} format)
+# add_dependencies(${NPU_LIB} format)
 
 # find all source files
 file(GLOB_RECURSE HCMAKE_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
