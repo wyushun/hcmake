@@ -14,7 +14,7 @@ set(FETCHCONTENT_QUIET off)
 # -------------------------------------------------------------------
 # compiler related
 # -------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -ggdb -O0")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wall -O2")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -ggdb -O0")
@@ -56,21 +56,6 @@ message(STATUS "GLOG_LIBRARY = ${GLOG_LIBRARY}")
 message(STATUS "GLOG_LIB_PATH = ${GLOG_LIB_PATH}")
 message(STATUS "GLOG_INCLUDE_DIR = ${GLOG_INCLUDE_DIR}")
 message(STATUS "GLOG_INCLUDE_PATH = ${GLOG_INCLUDE_PATH}")
-
-# -------------------------------------------------------------------
-# use find_package to find protobuf
-# -------------------------------------------------------------------
-#list(APPEND CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX})
-#find_package(Protobuf REQUIRED)
-#if(Protobuf_FOUND)
-#  message(STATUS "Protobuf_FOUND = ${Protobuf_FOUND}")
-#  message(STATUS "Protobuf_INCLUDE_DIR = ${Protobuf_INCLUDE_DIR}")
-#  message(STATUS "Protobuf_INCLUDES = ${Protobuf_INCLUDES}")
-#  message(STATUS "Protobuf_LIBRARY = ${Protobuf_LIBRARY}")
-#  message(STATUS "Protobuf_LIBRARIES = ${Protobuf_LIBRARIES}")
-#else()
-#  message(FATAL_ERROR "Protobuf library not found")
-#endif()
 
 # -------------------------------------------------------------------
 # define some test or global functions

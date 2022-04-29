@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "g++")
 project(hcmake LANGUAGES C CXX)
@@ -8,6 +8,5 @@ print_cache_vars()
 
 # build all targets
 add_subdirectory(src)
-add_subdirectory(py_exports)
 add_subdirectory(test)
 
