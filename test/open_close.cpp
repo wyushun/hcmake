@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
   }
   cout << "npu_aol_attach success: "
        << "\n\taol version: 0x" << std::hex << handle->aol_version
-       << "\n\tcore count: 0x" << std::hex << handle->core_count
+       << "\n\tcore count: " << (int)handle->core_count
        << "\n\tcore phy addr: 0x" << std::hex << handle->core_phy_addr << "\n";
 
   cout << "Executing npu_aol_detach......\n";
