@@ -98,7 +98,7 @@ endfunction()
 # -------------------------------------------------------------------
 # make a target to do clang-format
 # -------------------------------------------------------------------
-file(GLOB_RECURSE HCMAKE_SRCS ${INC_DIR}/*.[ch]pp ${SRC_DIR}/*.[ch]pp ${TEST_DIR}/*.[ch]pp)
+file(GLOB_RECURSE HCMAKE_SRCS ${INC_DIR}/*.h ${SRC_DIR}/*.cpp ${TEST_DIR}/*.[ch]pp)
 message(STATUS "hcmake project's SRCS: ${HCMAKE_SRCS}")
 add_custom_target(format ALL)
 add_custom_command(TARGET format PRE_BUILD COMMAND clang-format --verbose -i ${HCMAKE_SRCS})
