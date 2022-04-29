@@ -8,9 +8,8 @@ file(GLOB_RECURSE HCMAKE_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR} SRCS: ${SRCS}")
 
 # assign target include dirs and sources
-target_include_directories(${NPU_LIB} PUBLIC ${INC_DIR} ${GLOG_INCLUDE_DIR})
+target_include_directories(${NPU_LIB} PUBLIC ${INC_DIR})
 target_sources(${NPU_LIB} PRIVATE ${HCMAKE_SRCS})
-target_link_libraries(${NPU_LIB} INTERFACE ${GLOG_LIBRARY})
 
 # assign target compile options
 target_compile_features(${NPU_LIB} PRIVATE cxx_std_11)

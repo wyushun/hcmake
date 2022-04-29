@@ -37,27 +37,6 @@ message(STATUS "CMAKE_PREFIX_PATH = ${CMAKE_PREFIX_PATH}")
 message(STATUS "CMAKE_SYSTEM_PREFIX_PATH = ${CMAKE_SYSTEM_PREFIX_PATH}")
 
 # -------------------------------------------------------------------
-# use find_library and find_path to find glog
-# -------------------------------------------------------------------
-find_library(GLOG_LIBRARY
-  NAMES glog
-  # PATHS ${SELF_DEFINED_PATH}
-  REQUIRED
-  # NO_DEFAULT_PATH
-)
-find_path(GLOG_INCLUDE_DIR
-  NAMES glog/logging.h
-  # PATHS ${SELF_DEFINED_PATH}
-  REQUIRED
-  # NO_DEFAULT_PATH
-)
-message(STATUS "GLOG_ROOT = ${GLOG_ROOT}")
-message(STATUS "GLOG_LIBRARY = ${GLOG_LIBRARY}")
-message(STATUS "GLOG_LIB_PATH = ${GLOG_LIB_PATH}")
-message(STATUS "GLOG_INCLUDE_DIR = ${GLOG_INCLUDE_DIR}")
-message(STATUS "GLOG_INCLUDE_PATH = ${GLOG_INCLUDE_PATH}")
-
-# -------------------------------------------------------------------
 # define some test or global functions
 # -------------------------------------------------------------------
 function(print_cache_vars)
@@ -98,7 +77,7 @@ endfunction()
 # -------------------------------------------------------------------
 # make a target to do clang-format
 # -------------------------------------------------------------------
-file(GLOB_RECURSE HCMAKE_SRCS ${INC_DIR}/*.h ${SRC_DIR}/*.cpp ${TEST_DIR}/*.[ch]pp)
-message(STATUS "hcmake project's SRCS: ${HCMAKE_SRCS}")
-add_custom_target(format ALL)
-add_custom_command(TARGET format PRE_BUILD COMMAND clang-format --verbose -i ${HCMAKE_SRCS})
+# file(GLOB_RECURSE HCMAKE_SRCS ${INC_DIR}/*.h ${SRC_DIR}/*.cpp ${TEST_DIR}/*.[ch]pp)
+# message(STATUS "hcmake project's SRCS: ${HCMAKE_SRCS}")
+# add_custom_target(format ALL)
+# add_custom_command(TARGET format PRE_BUILD COMMAND clang-format --verbose -i ${HCMAKE_SRCS})
