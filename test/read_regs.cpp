@@ -50,10 +50,11 @@ struct RegInfo {
   string name;
   uint64_t addr;
   string desp;
+  uint32_t value;
 };
 
 // clang-format off
-const static RegInfo regs[(int)Reg::NUM] = {
+static RegInfo regs[(int)Reg::NUM] = {
   {.reg=Reg::C_DATE, .name="C_DATE", .addr=0x000, .desp=""},
   {.reg=Reg::C_VER, .name="C_VER", .addr=0x004, .desp=""},
   {.reg=Reg::START, .name="start", .addr=0x008, .desp=""},
@@ -107,23 +108,26 @@ int main(int argc, char** argv) {
   cout << "npu_aol_attach success: "
        << "\n\taol version: 0x" << std::hex << handle->aol_version
        << "\n\tcore count: " << (int)handle->core_count
-       << "\n\tcore phy addr: 0x" << std::hex << handle->core_phy_addr << "\n";
+       << "\n\tcore phy addr: 0x" << std::hex << handle->core_phy_addr << "\n\n";
 
-  cout << "regs info:\n";
-  cout << "-----------------------------------\n";
+  auto old_flags = cout.flags();
+  cout << std::left << setw(32) << "reg name" << setw(16) << "reg addr"
+       << setw(16) << "reg value" << endl;
+  cout << "--------------------------------------------------------------\n";
   for (auto i = 0; i < (int)Reg::NUM; i++) {
-    uint32_t value;
     auto ret =
-        npu_aol_read_regs(handle, regs[i].addr, &value, sizeof(uint32_t));
+        npu_aol_read_regs(handle, regs[i].addr + handle->core_phy_addr, &regs[i].value, 4);
     if (ret != NPU_AOL_OK) {
       cerr << "npu_aol_read_regs error when reading " << regs[i].name << "\n";
       return 1;
     }
-    cout << "reg: " << regs[i].name << ", phy addr: " << std::hex
-         << regs[i].addr << ", read value: " << std::hex << value << "\n";
+    cout << setw(32) << regs[i].name << setw(16) << std::hex
+         << handle->core_phy_addr + regs[i].addr << setw(16) << std::hex
+         << regs[i].value << "\n";
   }
+  cout.flags(old_flags);
 
-  cout << "Executing npu_aol_detach......\n";
+  cout << "\n\nExecuting npu_aol_detach......\n";
   auto ret = npu_aol_detach(handle);
   if (ret != NPU_AOL_OK) {
     cerr << "npu_aol_detach error!\n";
