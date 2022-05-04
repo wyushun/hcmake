@@ -89,14 +89,16 @@ void NPUTesting::read_regs() {
 }
 
 void NPUTesting::alloc_mem() {
+  auto old_flags = cout.flags();
   static uint64_t bytes = 1 * 1024 * 1024u;
-  for (uint32_t i = 0;; i++) {
-    cout << "Allocating NPU memory " << i << "MB...\n";
+  for (uint32_t i = 4;; i += 4) {
+    cout << "Allocating NPU memory " << std::dec << i << "MB...\n";
     auto *mem = npu_aol_alloc_dev_mem(
         handle_, i * bytes, NPU_AOL_MEM_PROT_READ | NPU_AOL_MEM_PROT_WRITE);
     if (mem) {
-      cout << "phy addr: 0x" << std::hex << mem->addr_phy << ", vir addr: 0x"
-           << std::hex << mem->addr_virt << "\n";
+      cout << "Mem size: " << show_size(mem->size) << ", phy addr: 0x"
+           << std::hex << mem->addr_phy << ", vir addr: 0x" << std::hex
+           << mem->addr_virt << "\n";
       auto ret = npu_aol_free_dev_mem(handle_, mem);
       if (ret != NPU_AOL_OK) {
         cerr << "npu_aol_free_dev_mem error!\n";
@@ -107,4 +109,27 @@ void NPUTesting::alloc_mem() {
       break;
     }
   }
+  cout.flags(old_flags);
+}
+
+string NPUTesting::show_size(uint64_t size) const {
+  if (size == 0) return "0B";
+
+  std::array<std::pair<uint64_t, string>, 4> mem_magnitude = {{
+      {1 * 1024 * 1024 * 1024, "G"},
+      {1 * 1024 * 1024, "M"},
+      {1 * 1024, "K"},
+      {1, "B"},
+  }};
+  std::ostringstream oss;
+
+  for (auto i = 0u; i < mem_magnitude.size(); i++) {
+    auto n = size / mem_magnitude[i].first;
+    size %= mem_magnitude[i].first;
+    if (n) {
+      oss << n << mem_magnitude[i].second;
+    }
+  }
+
+  return oss.str();
 }

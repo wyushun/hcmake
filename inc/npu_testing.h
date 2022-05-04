@@ -68,5 +68,8 @@ class NPUTesting {
   void alloc_mem();
 
  private:
+  string show_size(uint64_t size) const;
+
+ private:
   npu_aol_dev_handle_t *handle_;
 };
