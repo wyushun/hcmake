@@ -65,6 +65,7 @@ class NPUTesting {
 
  public:
   void read_regs();
+  void alloc_mem();
 
  private:
   npu_aol_dev_handle_t *handle_;

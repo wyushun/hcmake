@@ -87,3 +87,24 @@ void NPUTesting::read_regs() {
   }
   cout.flags(old_flags);
 }
+
+void NPUTesting::alloc_mem() {
+  static uint64_t bytes = 1 * 1024 * 1024u;
+  for (uint32_t i = 0;; i++) {
+    cout << "Allocating NPU memory " << i << "MB...\n";
+    auto *mem = npu_aol_alloc_dev_mem(
+        handle_, i * bytes, NPU_AOL_MEM_PROT_READ | NPU_AOL_MEM_PROT_WRITE);
+    if (mem) {
+      cout << "phy addr: 0x" << std::hex << mem->addr_phy << ", vir addr: 0x"
+           << std::hex << mem->addr_virt << "\n";
+      auto ret = npu_aol_free_dev_mem(handle_, mem);
+      if (ret != NPU_AOL_OK) {
+        cerr << "npu_aol_free_dev_mem error!\n";
+        break;
+      }
+    } else {
+      cerr << "npu_aol_alloc_dev_mem failure!\n";
+      break;
+    }
+  }
+}
