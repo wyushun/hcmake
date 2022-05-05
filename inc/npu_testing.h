@@ -71,5 +71,5 @@ class NPUTesting {
   string show_size(uint64_t size) const;
 
  private:
-  npu_aol_dev_handle_t *handle_;
+  npu_aol_dev_handle_t *dev_;
 };

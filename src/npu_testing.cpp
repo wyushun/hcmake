@@ -47,21 +47,21 @@ array<RegInfo, (int)Reg::NUM> NPUTesting::regs = {{
 
 NPUTesting::NPUTesting() {
   cout << "Executing npu_aol_attach......\n";
-  handle_ = npu_aol_attach(0, NPU_SCHEDULE_MODE_SINGLE);
-  if (!handle_) {
+  dev_ = npu_aol_attach(0, NPU_SCHEDULE_MODE_SINGLE);
+  if (!dev_) {
     cerr << "npu_aol_attach error!\n";
     return;
   }
 
   cout << "npu_aol_attach success: "
-       << "\n\taol version: 0x" << std::hex << handle_->aol_version
-       << "\n\tcore count: " << (int)handle_->core_count
-       << "\n\tcore phy addr: 0x" << std::hex << handle_->core_phy_addr << "\n";
+       << "\n\taol version: 0x" << std::hex << dev_->aol_version
+       << "\n\tcore count: " << (int)dev_->core_count << "\n\tcore phy addr: 0x"
+       << std::hex << dev_->core_phy_addr << "\n";
 }
 
 NPUTesting::~NPUTesting() {
   cout << "Executing npu_aol_detach......\n";
-  auto ret = npu_aol_detach(handle_);
+  auto ret = npu_aol_detach(dev_);
   if (ret != NPU_AOL_OK) {
     cerr << "npu_aol_detach error!\n";
     return;
@@ -75,14 +75,14 @@ void NPUTesting::read_regs() {
        << setw(16) << "reg value" << endl;
   cout << "--------------------------------------------------------------\n";
   for (auto i = 0; i < (int)Reg::NUM; i++) {
-    auto ret = npu_aol_read_regs(handle_, regs[i].addr + handle_->core_phy_addr,
+    auto ret = npu_aol_read_regs(dev_, regs[i].addr + dev_->core_phy_addr,
                                  &regs[i].value, 4);
     if (ret != NPU_AOL_OK) {
       cerr << "npu_aol_read_regs error when reading " << regs[i].name << "\n";
       return;
     }
     cout << setw(32) << regs[i].name << setw(16) << std::hex
-         << handle_->core_phy_addr + regs[i].addr << setw(16) << std::hex
+         << dev_->core_phy_addr + regs[i].addr << setw(16) << std::hex
          << regs[i].value << "\n";
   }
   cout.flags(old_flags);
@@ -94,12 +94,12 @@ void NPUTesting::alloc_mem() {
   for (uint32_t i = 4;; i += 4) {
     cout << "Allocating NPU memory " << std::dec << i << "MB...\n";
     auto *mem = npu_aol_alloc_dev_mem(
-        handle_, i * bytes, NPU_AOL_MEM_PROT_READ | NPU_AOL_MEM_PROT_WRITE);
+        dev_, i * bytes, NPU_AOL_MEM_PROT_READ | NPU_AOL_MEM_PROT_WRITE);
     if (mem) {
       cout << "Mem size: " << show_size(mem->size) << ", phy addr: 0x"
            << std::hex << mem->addr_phy << ", vir addr: 0x" << std::hex
            << mem->addr_virt << "\n";
-      auto ret = npu_aol_free_dev_mem(handle_, mem);
+      auto ret = npu_aol_free_dev_mem(dev_, mem);
       if (ret != NPU_AOL_OK) {
         cerr << "npu_aol_free_dev_mem error!\n";
         break;
