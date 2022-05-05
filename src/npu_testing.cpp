@@ -1,6 +1,13 @@
 #include "npu_testing.h"
 
 // clang-format off
+const array<std::pair<uint64_t, string>, 4> NPUTesting::mem_magnitude = {{
+    {1 * 1024 * 1024 * 1024, "G"},
+    {1 * 1024 * 1024, "M"},
+    {1 * 1024, "K"},
+    {1, "B"},
+}};
+
 array<RegInfo, (int)Reg::NUM> NPUTesting::regs = {{
   {.reg=Reg::C_DATE, .name="C_DATE", .addr=0x000, .value=0, .desp=""},
   {.reg=Reg::C_VER, .name="C_VER", .addr=0x004, .value=0, .desp=""},
@@ -69,7 +76,7 @@ NPUTesting::~NPUTesting() {
   cout << "npu_aol_detach success!\n";
 }
 
-void NPUTesting::read_regs() {
+void NPUTesting::read_regs() const {
   auto old_flags = cout.flags();
   cout << std::left << setw(32) << "reg name" << setw(16) << "reg addr"
        << setw(16) << "reg value" << endl;
@@ -88,7 +95,7 @@ void NPUTesting::read_regs() {
   cout.flags(old_flags);
 }
 
-void NPUTesting::alloc_mem() {
+void NPUTesting::alloc_mem() const {
   auto old_flags = cout.flags();
   static uint64_t bytes = 1 * 1024 * 1024u;
   for (uint32_t i = 4;; i += 4) {
@@ -112,15 +119,14 @@ void NPUTesting::alloc_mem() {
   cout.flags(old_flags);
 }
 
+void NPUTesting::calc_api_time() const {
+  auto old_flags = cout.flags();
+  cout.flags(old_flags);
+}
+
 string NPUTesting::show_size(uint64_t size) const {
   if (size == 0) return "0B";
 
-  std::array<std::pair<uint64_t, string>, 4> mem_magnitude = {{
-      {1 * 1024 * 1024 * 1024, "G"},
-      {1 * 1024 * 1024, "M"},
-      {1 * 1024, "K"},
-      {1, "B"},
-  }};
   std::ostringstream oss;
 
   for (auto i = 0u; i < mem_magnitude.size(); i++) {
@@ -132,4 +138,24 @@ string NPUTesting::show_size(uint64_t size) const {
   }
 
   return oss.str();
+}
+
+void NPUTesting::time_begin(struct timeval &begin) { gettimeofday(&begin, 0); }
+
+unsigned long NPUTesting::time_end(const struct timeval &begin, TimeUnit type) {
+  struct timeval end;
+  gettimeofday(&end, 0);
+  if (type == TimeUnit::TIME_S) {
+    return (1000000 * (end.tv_sec - begin.tv_sec) +
+            (end.tv_usec - begin.tv_usec)) /
+           1000000;
+  } else if (type == TimeUnit::TIME_MS) {
+    return (1000000 * (end.tv_sec - begin.tv_sec) +
+            (end.tv_usec - begin.tv_usec)) /
+           1000;
+  } else {
+    return (1000000 * (end.tv_sec - begin.tv_sec) +
+            (end.tv_usec - begin.tv_usec)) /
+           1;
+  }
 }
