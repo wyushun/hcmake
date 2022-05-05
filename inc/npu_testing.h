@@ -51,8 +51,8 @@ struct RegInfo {
   Reg reg;
   string name;
   uint64_t addr;
-  string desp;
   uint32_t value;
+  string desp;
 };
 
 class NPUTesting {
