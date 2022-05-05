@@ -53,6 +53,7 @@ array<RegInfo, (int)Reg::NUM> NPUTesting::regs = {{
 // clang-format on
 
 NPUTesting::NPUTesting() {
+  auto old_flags = cout.flags();
   cout << "Executing npu_aol_attach......\n";
   dev_ = npu_aol_attach(0, NPU_SCHEDULE_MODE_SINGLE);
   if (!dev_) {
@@ -64,9 +65,11 @@ NPUTesting::NPUTesting() {
        << "\n\taol version: 0x" << std::hex << dev_->aol_version
        << "\n\tcore count: " << (int)dev_->core_count << "\n\tcore phy addr: 0x"
        << std::hex << dev_->core_phy_addr << "\n";
+  cout.flags(old_flags);
 }
 
 NPUTesting::~NPUTesting() {
+  auto old_flags = cout.flags();
   cout << "Executing npu_aol_detach......\n";
   auto ret = npu_aol_detach(dev_);
   if (ret != NPU_AOL_OK) {
@@ -74,6 +77,7 @@ NPUTesting::~NPUTesting() {
     return;
   }
   cout << "npu_aol_detach success!\n";
+  cout.flags(old_flags);
 }
 
 void NPUTesting::read_regs() const {
