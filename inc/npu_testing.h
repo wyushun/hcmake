@@ -57,8 +57,8 @@ struct RegInfo {
 
 class NPUTesting {
  private:
-  static array<RegInfo, (int)Reg::NUM> regs;
   const static std::array<std::pair<uint64_t, string>, 4> mem_magnitude;
+  static array<RegInfo, (int)Reg::NUM> regs;
   enum class TimeUnit {
     TIME_S,
     TIME_MS,
@@ -72,7 +72,7 @@ class NPUTesting {
  public:
   void read_regs() const;
   void alloc_mem() const;
-  void calc_api_time() const;
+  void calc_api_time();
 
  private:
   string show_size(uint64_t size) const;

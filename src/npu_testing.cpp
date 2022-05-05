@@ -119,8 +119,45 @@ void NPUTesting::alloc_mem() const {
   cout.flags(old_flags);
 }
 
-void NPUTesting::calc_api_time() const {
+void NPUTesting::calc_api_time() {
   auto old_flags = cout.flags();
+  int ret = NPU_AOL_ERROR;
+
+  timeval begin;
+
+  // testing npu_aol_detach time
+  time_begin(begin);
+  ret = npu_aol_detach(dev_);
+  if (ret != NPU_AOL_OK) {
+    cerr << "npu_aol_detach error!\n";
+    return;
+  }
+  auto t_npu_aol_detach = time_end(begin);
+
+  // testing npu_aol_attach time
+  time_begin(begin);
+  dev_ = npu_aol_attach(0, NPU_SCHEDULE_MODE_SINGLE);
+  if (!dev_) {
+    cerr << "npu_aol_attach error!\n";
+    return;
+  }
+  auto t_npu_aol_attach = time_end(begin);
+
+  // testing npu_aol_read_regs time
+  time_begin(begin);
+  ret = npu_aol_read_regs(dev_, regs[10].addr + dev_->core_phy_addr,
+                          &regs[10].value, 4);
+  if (ret != NPU_AOL_OK) {
+    cerr << "npu_aol_read_regs error when reading " << regs[10].name << "\n";
+    return;
+  }
+  auto t_npu_aol_read_regs = time_end(begin);
+
+  // output
+  cout << "npu_aol_attach: " << t_npu_aol_attach << "ms\n";
+  cout << "npu_aol_detach: " << t_npu_aol_detach << "ms\n";
+  cout << "npu_aol_read_regs: " << t_npu_aol_read_regs << "ms\n";
+
   cout.flags(old_flags);
 }
 
