@@ -57,7 +57,7 @@ struct RegInfo {
 
 class NPUTesting {
  private:
-  static RegInfo regs[(int)Reg::NUM];
+  static array<RegInfo, (int)Reg::NUM> regs;
 
  public:
   NPUTesting();

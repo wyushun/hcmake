@@ -1,7 +1,7 @@
 #include "npu_testing.h"
 
 // clang-format off
-RegInfo NPUTesting::regs[(int)Reg::NUM] = {
+array<RegInfo, (int)Reg::NUM> NPUTesting::regs = {{
   {.reg=Reg::C_DATE, .name="C_DATE", .addr=0x000, .desp="", .value=0},
   {.reg=Reg::C_VER, .name="C_VER", .addr=0x004, .desp="", .value=0},
   {.reg=Reg::START, .name="start", .addr=0x008, .desp="", .value=0},
@@ -42,7 +42,7 @@ RegInfo NPUTesting::regs[(int)Reg::NUM] = {
   {.reg=Reg::LOAD_CNT, .name="load_cnt", .addr=0xC40, .desp="", .value=0},
   {.reg=Reg::SAVE_CNT, .name="save_cnt", .addr=0xC44, .desp="", .value=0},
   {.reg=Reg::PROFILE_ERR_CODE, .name="profile_err_code", .addr=0xC80, .desp="", .value=0},
-};
+}};
 // clang-format on
 
 NPUTesting::NPUTesting() {
