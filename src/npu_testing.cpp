@@ -132,7 +132,7 @@ void NPUTesting::calc_api_time() {
     cerr << "npu_aol_detach error!\n";
     return;
   }
-  auto t_npu_aol_detach = time_end(begin);
+  auto t_npu_aol_detach = time_end(begin, TimeUnit::TIME_US);
 
   // testing npu_aol_attach time
   time_begin(begin);
@@ -141,7 +141,7 @@ void NPUTesting::calc_api_time() {
     cerr << "npu_aol_attach error!\n";
     return;
   }
-  auto t_npu_aol_attach = time_end(begin);
+  auto t_npu_aol_attach = time_end(begin, TimeUnit::TIME_US);
 
   // testing npu_aol_read_regs time
   time_begin(begin);
@@ -151,12 +151,12 @@ void NPUTesting::calc_api_time() {
     cerr << "npu_aol_read_regs error when reading " << regs[10].name << "\n";
     return;
   }
-  auto t_npu_aol_read_regs = time_end(begin);
+  auto t_npu_aol_read_regs = time_end(begin, TimeUnit::TIME_US);
 
   // output
-  cout << "npu_aol_attach: " << t_npu_aol_attach << "ms\n";
-  cout << "npu_aol_detach: " << t_npu_aol_detach << "ms\n";
-  cout << "npu_aol_read_regs: " << t_npu_aol_read_regs << "ms\n";
+  cout << "npu_aol_attach: " << t_npu_aol_attach << "us\n";
+  cout << "npu_aol_detach: " << t_npu_aol_detach << "us\n";
+  cout << "npu_aol_read_regs: " << t_npu_aol_read_regs << "us\n";
 
   cout.flags(old_flags);
 }
