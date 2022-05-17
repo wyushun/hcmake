@@ -100,6 +100,13 @@ using std::oct;
 using std::setfill;
 using std::setw;
 
+#if __cplusplus >= 201103L
+template <typename... Args>
+void unused(Args&&... args) {
+  (void)(sizeof...(args));
+}
+#endif
+
 #if __cplusplus >= 201402L
 using std::make_unique;
 #else
@@ -107,4 +114,32 @@ template <typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
+#endif
+
+#if __cplusplus >= 201703L
+#include <any>
+using std::any;
+#else
+#include "any.hpp"
+using open_source::any;
+#endif
+
+#if __cplusplus >= 201703L
+#include <optional>
+using std::optional;
+#else
+#include "optional.hpp"
+using tl::optional;
+
+#endif
+#ifdef __GNUC__
+#define UNUSED(x) UNUSED_##x __attribute__((__unused__))
+#else
+#define UNUSED(x) UNUSED_##x
+#endif
+
+#ifdef __GNUC__
+#define UNUSED_FUNCTION(x) __attribute__((__unused__)) UNUSED_##x
+#else
+#define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
