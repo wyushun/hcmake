@@ -40,13 +40,17 @@ int main(int argc, char** argv) {
 
   cout << "test any..." << endl;
   any t = size;
-  cout << "any value is: " << open_source::get<uint64_t>(t) << endl;
+  cout << "any value is: " << any::get<uint64_t>(t) << endl;
 
   cout << "test optional..." << endl;
+  optional<string> s = "hello world!";
+  if (s.has_value()) {
+    cout << "optional value is: " << s.value() << endl;
+  }
+
   optional<any> t2 = t;
   if (t2.has_value()) {
-    // cout << "optional value is: " << open_source::get<uint64_t>(t2.value)
-    //      << endl;
+    cout << "optional value is: " << any::get<uint64_t>(t2.value()) << endl;
   }
   return 0;
 }

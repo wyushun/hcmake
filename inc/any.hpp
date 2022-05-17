@@ -7,35 +7,6 @@
 
 namespace open_source {
 
-// forward declare any;
-class any;
-
-/*!
- * Get a  reference to content stored in the any as type T.
- * This will cause an error if
- * T does not match the type stored.
- * This function is not part of std::any standard.
- *
- * \param src The source source any container.
- * \return The reference of content
- * \tparam T The type of the value to be fetched.
- */
-template <typename T>
-inline T& get(any& src);
-
-/*!
- * Get the const reference content stored in the any as type T.
- * This will cause an error if
- * T does not match the type stored.
- * This function is not part of std::any standard.
- *
- * \param src The source source any container.
- * \return The reference of content
- * \tparam T The type of the value to be fetched.
- */
-template <typename T>
-inline const T& get(const any& src);
-
 /*
  *   any a = std::string("mydear"), b = 1;
  *   // get reference out and add it
@@ -47,6 +18,33 @@ inline const T& get(const any& src);
  *   LOG(INFO) << get<int>(a);
  */
 class any {
+ public:
+  /*!
+   * Get a  reference to content stored in the any as type T.
+   * This will cause an error if
+   * T does not match the type stored.
+   * This function is not part of std::any standard.
+   *
+   * \param src The source source any container.
+   * \return The reference of content
+   * \tparam T The type of the value to be fetched.
+   */
+  template <typename T>
+  static inline T& get(any& src);
+
+  /*!
+   * Get the const reference content stored in the any as type T.
+   * This will cause an error if
+   * T does not match the type stored.
+   * This function is not part of std::any standard.
+   *
+   * \param src The source source any container.
+   * \return The reference of content
+   * \tparam T The type of the value to be fetched.
+   */
+  template <typename T>
+  static inline const T& get(const any& src);
+
  public:
   /*! \brief default constructor */
   inline any() = default;
@@ -284,13 +282,13 @@ inline void any::check_type() const {
 }
 
 template <typename T>
-inline const T& get(const any& src) {
+inline const T& any::get(const any& src) {
   src.check_type<T>();
   return *any::TypeInfo<T>::get_ptr(&(src.data_));
 }
 
 template <typename T>
-inline T& get(any& src) {
+inline T& any::get(any& src) {
   src.check_type<T>();
   return *any::TypeInfo<T>::get_ptr(&(src.data_));
 }
