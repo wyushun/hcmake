@@ -102,7 +102,7 @@ using std::setw;
 
 #if __cplusplus >= 201103L
 template <typename... Args>
-void unused(Args&&... args) {
+void unused(Args &&... args) {
   (void)(sizeof...(args));
 }
 #endif
@@ -111,7 +111,7 @@ void unused(Args&&... args) {
 using std::make_unique;
 #else
 template <typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args&&... args) {
+std::unique_ptr<T> make_unique(Args &&... args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 #endif
@@ -130,8 +130,13 @@ using std::optional;
 #else
 #include "optional.hpp"
 using tl::optional;
-
 #endif
+
+template <typename E>
+constexpr typename std::underlying_type<E>::type E2I(E e) noexcept {
+  return static_cast<typename std::underlying_type<E>::type>(e);
+}
+
 #ifdef __GNUC__
 #define UNUSED(x) UNUSED_##x __attribute__((__unused__))
 #else
@@ -143,3 +148,16 @@ using tl::optional;
 #else
 #define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
+
+enum class TimeUnit {
+  TIME_S,
+  TIME_MS,
+  TIME_US,
+};
+
+void timeBegin(struct timeval &begin);
+unsigned long timeEnd(const struct timeval &begin,
+                      TimeUnit type = TimeUnit::TIME_MS);
+
+enum class MemUnit { GB, MB, KB, B, NUM };
+string showMemSize(uint64_t size);
