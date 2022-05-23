@@ -6,6 +6,8 @@ include(cmake/common.cmake)
 
 print_cache_vars()
 
+find_package(OpenCV REQUIRED)
+
 # build all targets
 add_subdirectory(src)
 add_subdirectory(py_exports)
