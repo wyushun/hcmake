@@ -3,7 +3,6 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <getopt.h>
-#include <glog/logging.h>
 #include <pwd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -78,7 +77,9 @@ using std::front_inserter;
 
 using std::fstream;
 using std::ifstream;
+using std::istream;
 using std::ofstream;
+using std::ostream;
 using std::stringstream;
 
 using std::async;
@@ -99,6 +100,8 @@ using std::left;
 using std::oct;
 using std::setfill;
 using std::setw;
+
+#include <glog/logging.h>
 
 #if __cplusplus >= 201103L
 template <typename... Args>
@@ -126,9 +129,11 @@ using open_source::any;
 
 #if __cplusplus >= 201703L
 #include <optional>
+using std::nullopt;
 using std::optional;
 #else
 #include "optional.hpp"
+using tl::nullopt;
 using tl::optional;
 #endif
 
@@ -149,15 +154,61 @@ constexpr typename std::underlying_type<E>::type E2I(E e) noexcept {
 #define UNUSED_FUNCTION(x) UNUSED_##x
 #endif
 
-enum class TimeUnit {
-  TIME_S,
-  TIME_MS,
-  TIME_US,
-};
+// calculate spent time
+enum class TimeUnit { S, MS, US };
 
 void timeBegin(struct timeval &begin);
 unsigned long timeEnd(const struct timeval &begin,
-                      TimeUnit type = TimeUnit::TIME_MS);
+                      TimeUnit type = TimeUnit::MS);
 
+// show memory size in human readable form
 enum class MemUnit { GB, MB, KB, B, NUM };
 string showMemSize(uint64_t size);
+
+// file operation related funcs
+template <typename T>
+void chkOpen(T &f, const string &fname) {
+  struct stat buf;
+
+  if (lstat(fname.c_str(), &buf) == -1) {
+    cerr << fname << " stat error: " << strerror(errno) << endl;
+    abort();
+  }
+
+  // handle common file
+  if (!S_ISREG(buf.st_mode)) {
+    cerr << "Not a normal file: " << fname << endl;
+    abort();
+  }
+
+  if (f.fail()) {
+    cerr << "open file fail(): " << fname << endl;
+    abort();
+  }
+
+  if (f.bad()) {
+    cerr << "open file bad(): " << fname << endl;
+    abort();
+  }
+
+  if (f.eof()) {
+    cerr << "open file eof(): " << fname << endl;
+    abort();
+  }
+}
+uint64_t getFileSize(const string &fname);
+enum class SaveMode { TRUNC, APPEND };
+uint64_t loadBin(const string &fname, char *data, uint64_t size);
+void saveBin(const string &fname, const char *data, uint64_t size,
+             SaveMode mode = SaveMode::TRUNC);
+void delFileOrDir(const string &name);
+bool chkFile(const string &name, bool del_exists = false);
+bool chkFolder(const string &name, bool del_exists = false);
+
+// string truncation and split funcs
+string trim(const string &str);
+vector<string> split(const string &str, const string &delim = " ,:;\t",
+                     bool trim_flag = true);
+
+// math related
+float sigmoid(float p);
