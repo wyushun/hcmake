@@ -31,8 +31,8 @@ set(TEST_DIR ${CMAKE_SOURCE_DIR}/test)
 
 # for find_xxx functions
 # list(APPEND CMAKE_PREFIX_PATH $ENV{CONDA_PREFIX})
-# list(APPEND CMAKE_PREFIX_PATH $ENV{HOME}/.local/)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
+list(APPEND CMAKE_PREFIX_PATH $ENV{HOME}/.local/)
+# list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
 message(STATUS "CMAKE_PREFIX_PATH = ${CMAKE_PREFIX_PATH}")
 message(STATUS "CMAKE_SYSTEM_PREFIX_PATH = ${CMAKE_SYSTEM_PREFIX_PATH}")
 
@@ -61,16 +61,17 @@ message(STATUS "GLOG_INCLUDE_PATH = ${GLOG_INCLUDE_PATH}")
 # use find_package to find protobuf
 # -------------------------------------------------------------------
 #list(APPEND CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX})
-#find_package(Protobuf REQUIRED)
-#if(Protobuf_FOUND)
-#  message(STATUS "Protobuf_FOUND = ${Protobuf_FOUND}")
-#  message(STATUS "Protobuf_INCLUDE_DIR = ${Protobuf_INCLUDE_DIR}")
-#  message(STATUS "Protobuf_INCLUDES = ${Protobuf_INCLUDES}")
-#  message(STATUS "Protobuf_LIBRARY = ${Protobuf_LIBRARY}")
-#  message(STATUS "Protobuf_LIBRARIES = ${Protobuf_LIBRARIES}")
-#else()
-#  message(FATAL_ERROR "Protobuf library not found")
-#endif()
+set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
+find_package(Protobuf REQUIRED)
+if(Protobuf_FOUND)
+  message(STATUS "Protobuf_FOUND = ${Protobuf_FOUND}")
+  message(STATUS "Protobuf_INCLUDE_DIR = ${Protobuf_INCLUDE_DIR}")
+  message(STATUS "Protobuf_INCLUDES = ${Protobuf_INCLUDES}")
+  message(STATUS "Protobuf_LIBRARY = ${Protobuf_LIBRARY}")
+  message(STATUS "Protobuf_LIBRARIES = ${Protobuf_LIBRARIES}")
+else()
+  message(FATAL_ERROR "Protobuf library not found")
+endif()
 
 # -------------------------------------------------------------------
 # define some test or global functions

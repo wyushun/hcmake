@@ -1,10 +1,4 @@
-find_package(Protobuf)
-
-if(PROTOBUF_FOUND)
-    protobuf_generate_cpp(ONNX_PROTO_SRCS ONNX_PROTO_HDRS onnx.proto)
-else()
-    message(WARNING "Protobuf not found, onnx model convert tool won't be built")
-endif()
+protobuf_generate_cpp(ONNX_PROTO_SRCS ONNX_PROTO_HDRS onnx.proto)
 
 # -------------------------------------------------------------------
 # fetch and compile and install googletest and benchmark
@@ -57,7 +51,7 @@ foreach(F ${SRCS})
   target_sources(${ELF} PRIVATE ${F} ${ONNX_PROTO_SRCS} ${ONNX_PROTO_HDRS})
   target_include_directories(${ELF} PRIVATE ${INC_DIR} ${PROTOBUF_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
   target_compile_features(${ELF} PRIVATE cxx_std_14)
-  target_compile_options(${ELF} PRIVATE -Wall -Werror)
+  target_compile_options(${ELF} PRIVATE -Wall)
   target_link_libraries(${ELF} PUBLIC ${PROTOBUF_LIBRARIES} benchmark gtest hcmake pthread)
 endforeach()
 
