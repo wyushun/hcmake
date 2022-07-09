@@ -8,6 +8,8 @@ print_cache_vars()
 
 # build all targets
 add_subdirectory(src)
-add_subdirectory(py_exports)
 add_subdirectory(test)
+if(BUILD_PYBIND)
+  add_subdirectory(py_exports)
+endif()
 

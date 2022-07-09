@@ -2,6 +2,8 @@
 # options and definitions
 # -------------------------------------------------------------------
 option(USE_LOG "record running log" OFF)
+option(BUILD_PYBIND "build pybind switch" ON)
+option(BUILD_GRPC "build grpc switch" OFF)
 if(USE_LOG)
   add_definitions(-DUSE_LOG)
 endif()
