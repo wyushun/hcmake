@@ -9,12 +9,13 @@ cmake \
   -S ${SOUCE_DIR} \
   -B ${BUILD_DIR} \
   -G "Unix Makefiles" \
-  -DCMAKE_BUILD_TYPE=Debug \
+  -DBUILD_SHARED_LIBS=ON \
+  -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-  -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-  -DPYTHON_EXECUTABLE=`which python3` \
+  -DCMAKE_TOOLCHAIN_FILE=./cmake/aarch64-linux-gnu.toolchain.cmake \
   ..
 cmake --build ${BUILD_DIR} -j16
 
 # judge and create .local folder, do install
+# -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
 # make DESTDIR=${INSTALL_DIR} install
