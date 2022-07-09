@@ -37,7 +37,7 @@ foreach(F ${SRCS})
   target_sources(${ELF} PRIVATE ${F})
   target_include_directories(${ELF} PRIVATE ${INC_DIR})
   target_compile_features(${ELF} PRIVATE cxx_std_14)
-  target_compile_options(${ELF} PRIVATE -Wall -Werror)
+  target_compile_options(${ELF} PRIVATE -Wall)
   target_link_libraries(${ELF} PUBLIC benchmark gtest hcmake pthread)
 endforeach()
 
