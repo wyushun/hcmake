@@ -194,7 +194,7 @@ template <
                              is_const_or_const_ref<Args...>::value)>,
 #endif
     typename = enable_if_t<std::is_member_pointer<decay_t<Fn>>::value>, int = 0>
-constexpr auto invoke(Fn &&f, Args &&... args) noexcept(
+constexpr auto invoke(Fn &&f, Args &&...args) noexcept(
     noexcept(std::mem_fn(f)(std::forward<Args>(args)...)))
     -> decltype(std::mem_fn(f)(std::forward<Args>(args)...)) {
   return std::mem_fn(f)(std::forward<Args>(args)...);
@@ -202,7 +202,7 @@ constexpr auto invoke(Fn &&f, Args &&... args) noexcept(
 
 template <typename Fn, typename... Args,
           typename = enable_if_t<!std::is_member_pointer<decay_t<Fn>>::value>>
-constexpr auto invoke(Fn &&f, Args &&... args) noexcept(
+constexpr auto invoke(Fn &&f, Args &&...args) noexcept(
     noexcept(std::forward<Fn>(f)(std::forward<Args>(args)...)))
     -> decltype(std::forward<Fn>(f)(std::forward<Args>(args)...)) {
   return std::forward<Fn>(f)(std::forward<Args>(args)...);
@@ -289,8 +289,8 @@ struct is_swappable<T[N], T[N]>
     : std::integral_constant<
           bool,
           decltype(detail::swap_adl_tests::can_swap<T[N], T[N]>(0))::value &&
-              (!decltype(
-                   detail::swap_adl_tests::uses_std<T[N], T[N]>(0))::value ||
+              (!decltype(detail::swap_adl_tests::uses_std<T[N], T[N]>(
+                   0))::value ||
                is_swappable<T, T>::value)> {};
 
 template <class T, class U = T>
@@ -298,12 +298,10 @@ struct is_nothrow_swappable
     : std::integral_constant<
           bool,
           is_swappable<T, U>::value &&
-              ((decltype(detail::swap_adl_tests::uses_std<T, U>(0))::value
-                    &&detail::swap_adl_tests::is_std_swap_noexcept<T>::value) ||
+              ((decltype(detail::swap_adl_tests::uses_std<T, U>(0))::value &&
+                detail::swap_adl_tests::is_std_swap_noexcept<T>::value) ||
                (!decltype(detail::swap_adl_tests::uses_std<T, U>(0))::value &&
-                    detail::swap_adl_tests::is_adl_swap_noexcept<T,
-                                                                 U>::value))> {
-};
+                detail::swap_adl_tests::is_adl_swap_noexcept<T, U>::value))> {};
 #endif
 #endif
 
@@ -396,7 +394,7 @@ struct optional_storage_base {
       : m_dummy(), m_has_value(false) {}
 
   template <class... U>
-  TL_OPTIONAL_11_CONSTEXPR optional_storage_base(in_place_t, U &&... u)
+  TL_OPTIONAL_11_CONSTEXPR optional_storage_base(in_place_t, U &&...u)
       : m_value(std::forward<U>(u)...), m_has_value(true) {}
 
   ~optional_storage_base() {
@@ -422,7 +420,7 @@ struct optional_storage_base<T, true> {
       : m_dummy(), m_has_value(false) {}
 
   template <class... U>
-  TL_OPTIONAL_11_CONSTEXPR optional_storage_base(in_place_t, U &&... u)
+  TL_OPTIONAL_11_CONSTEXPR optional_storage_base(in_place_t, U &&...u)
       : m_value(std::forward<U>(u)...), m_has_value(true) {}
 
   // No destructor, so this class is trivially destructible
@@ -448,7 +446,7 @@ struct optional_operations_base : optional_storage_base<T> {
   }
 
   template <class... Args>
-  void construct(Args &&... args) noexcept {
+  void construct(Args &&...args) noexcept {
     new (std::addressof(this->m_value)) T(std::forward<Args>(args)...);
     this->m_has_value = true;
   }
@@ -857,15 +855,15 @@ class optional : private detail::optional_move_assign_base<T>,
 #else
   /// Carries out some operation on the stored object if there is one.
   template <class F>
-  TL_OPTIONAL_11_CONSTEXPR decltype(
-      optional_map_impl(std::declval<optional &>(), std::declval<F &&>()))
+  TL_OPTIONAL_11_CONSTEXPR decltype(optional_map_impl(
+      std::declval<optional &>(), std::declval<F &&>()))
   map(F &&f) & {
     return optional_map_impl(*this, std::forward<F>(f));
   }
 
   template <class F>
-  TL_OPTIONAL_11_CONSTEXPR decltype(
-      optional_map_impl(std::declval<optional &&>(), std::declval<F &&>()))
+  TL_OPTIONAL_11_CONSTEXPR decltype(optional_map_impl(
+      std::declval<optional &&>(), std::declval<F &&>()))
   map(F &&f) && {
     return optional_map_impl(std::move(*this), std::forward<F>(f));
   }
@@ -912,15 +910,15 @@ class optional : private detail::optional_move_assign_base<T>,
 #else
   /// Carries out some operation on the stored object if there is one.
   template <class F>
-  TL_OPTIONAL_11_CONSTEXPR decltype(
-      optional_map_impl(std::declval<optional &>(), std::declval<F &&>()))
+  TL_OPTIONAL_11_CONSTEXPR decltype(optional_map_impl(
+      std::declval<optional &>(), std::declval<F &&>()))
   transform(F &&f) & {
     return optional_map_impl(*this, std::forward<F>(f));
   }
 
   template <class F>
-  TL_OPTIONAL_11_CONSTEXPR decltype(
-      optional_map_impl(std::declval<optional &&>(), std::declval<F &&>()))
+  TL_OPTIONAL_11_CONSTEXPR decltype(optional_map_impl(
+      std::declval<optional &&>(), std::declval<F &&>()))
   transform(F &&f) && {
     return optional_map_impl(std::move(*this), std::forward<F>(f));
   }
@@ -1126,7 +1124,7 @@ class optional : private detail::optional_move_assign_base<T>,
   template <class... Args>
   constexpr explicit optional(
       detail::enable_if_t<std::is_constructible<T, Args...>::value, in_place_t>,
-      Args &&... args)
+      Args &&...args)
       : base(in_place, std::forward<Args>(args)...) {}
 
   template <class U, class... Args>
@@ -1134,7 +1132,7 @@ class optional : private detail::optional_move_assign_base<T>,
       detail::enable_if_t<std::is_constructible<T, std::initializer_list<U> &,
                                                 Args &&...>::value,
                           in_place_t>,
-      std::initializer_list<U> il, Args &&... args) {
+      std::initializer_list<U> il, Args &&...args) {
     this->construct(il, std::forward<Args>(args)...);
   }
 
@@ -1276,7 +1274,7 @@ class optional : private detail::optional_move_assign_base<T>,
   /// Constructs the value in-place, destroying the current one if there is
   /// one.
   template <class... Args>
-  T &emplace(Args &&... args) {
+  T &emplace(Args &&...args) {
     static_assert(std::is_constructible<T, Args &&...>::value,
                   "T must be constructible with Args");
 
@@ -1289,7 +1287,7 @@ class optional : private detail::optional_move_assign_base<T>,
   detail::enable_if_t<
       std::is_constructible<T, std::initializer_list<U> &, Args &&...>::value,
       T &>
-  emplace(std::initializer_list<U> il, Args &&... args) {
+  emplace(std::initializer_list<U> il, Args &&...args) {
     *this = nullopt;
     this->construct(il, std::forward<Args>(args)...);
     return value();
@@ -1551,12 +1549,12 @@ inline constexpr optional<Ret> make_optional(U &&v) {
 }
 
 template <class T, class... Args>
-inline constexpr optional<T> make_optional(Args &&... args) {
+inline constexpr optional<T> make_optional(Args &&...args) {
   return optional<T>(in_place, std::forward<Args>(args)...);
 }
 template <class T, class U, class... Args>
 inline constexpr optional<T> make_optional(std::initializer_list<U> il,
-                                           Args &&... args) {
+                                           Args &&...args) {
   return optional<T>(in_place, il, std::forward<Args>(args)...);
 }
 

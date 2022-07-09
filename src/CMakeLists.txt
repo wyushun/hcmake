@@ -1,7 +1,6 @@
 # set target
 set(HCMAKE_LIB "hcmake")
 add_library(${HCMAKE_LIB} SHARED)
-# add_dependencies(${HCMAKE_LIB} format)
 
 # find all source files
 file(GLOB_RECURSE HCMAKE_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)

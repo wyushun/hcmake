@@ -102,7 +102,7 @@ using std::setw;
 
 #if __cplusplus >= 201103L
 template <typename... Args>
-void unused(Args &&... args) {
+void unused(Args &&...args) {
   (void)(sizeof...(args));
 }
 #endif
@@ -111,7 +111,7 @@ void unused(Args &&... args) {
 using std::make_unique;
 #else
 template <typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args &&... args) {
+std::unique_ptr<T> make_unique(Args &&...args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 #endif

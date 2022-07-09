@@ -23,17 +23,6 @@ message(STATUS "googletest_BINARY_DIR = ${googletest_BINARY_DIR}")
 message(STATUS "benchmark_SOURCE_DIR = ${benchmark_SOURCE_DIR}")
 message(STATUS "benchmark_BINARY_DIR = ${benchmark_BINARY_DIR}")
 
-add_custom_command(OUTPUT install_googletest
-  COMMAND ${CMAKE_COMMAND} -P cmake_install.cmake
-  WORKING_DIRECTORY ${googletest_BINARY_DIR}
-  DEPENDS gtest gtest_main gmock gmock_main)
-add_custom_command(OUTPUT install_benchmark
-  COMMAND ${CMAKE_COMMAND} -P cmake_install.cmake
-  WORKING_DIRECTORY ${benchmark_BINARY_DIR}
-  DEPENDS benchmark benchmark_main)
-add_custom_target(install_3rd_party ALL
-  DEPENDS install_googletest install_benchmark)
-
 # -------------------------------------------------------------------
 # build targets according to test file's name
 # -------------------------------------------------------------------
@@ -43,7 +32,6 @@ foreach(F ${SRCS})
   get_filename_component(F_PREFIX ${F} NAME_WE)
   set(ELF ${F_PREFIX})
   add_executable(${ELF})
-  add_dependencies(${ELF} install_3rd_party)
   message(STATUS "Building ELF target: ${ELF}")
 
   target_sources(${ELF} PRIVATE ${F})
