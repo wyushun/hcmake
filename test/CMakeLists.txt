@@ -26,8 +26,8 @@ print(benchmark_BINARY_DIR)
 # -------------------------------------------------------------------
 # build targets according to test file's name
 # -------------------------------------------------------------------
+print(CMAKE_CURRENT_SOURCE_DIR)
 aux_source_directory(. SRCS)
-message(STATUS "${CMAKE_CURRENT_SOURCE_DIR} SRCS: ${SRCS}")
 foreach(F ${SRCS})
   get_filename_component(F_PREFIX ${F} NAME_WE)
   set(ELF ${F_PREFIX})

@@ -1,10 +1,13 @@
 # set target
 set(HCMAKE_LIB "hcmake")
-add_library(${HCMAKE_LIB} SHARED)
+# add_library(${HCMAKE_LIB} SHARED)
+add_library(${HCMAKE_LIB})
 
 # find all source files
-file(GLOB_RECURSE HCMAKE_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-message(STATUS "${CMAKE_CURRENT_SOURCE_DIR} SRCS: ${SRCS}")
+file(GLOB_RECURSE HCMAKE_SRCS 
+  ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
+print(CMAKE_CURRENT_SOURCE_DIR)
 
 # assign target include dirs and sources
 target_include_directories(${HCMAKE_LIB} PUBLIC ${INC_DIR} ${GLOG_INCLUDE_DIR})
