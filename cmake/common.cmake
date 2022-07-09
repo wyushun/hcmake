@@ -62,7 +62,7 @@ message(STATUS "GLOG_INCLUDE_PATH = ${GLOG_INCLUDE_PATH}")
 # -------------------------------------------------------------------
 #list(APPEND CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX})
 set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 if(Protobuf_FOUND)
   message(STATUS "Protobuf_FOUND = ${Protobuf_FOUND}")
   message(STATUS "Protobuf_INCLUDE_DIR = ${Protobuf_INCLUDE_DIR}")
