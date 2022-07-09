@@ -3,7 +3,7 @@
 # -------------------------------------------------------------------
 option(USE_LOG "record running log" OFF)
 option(BUILD_PYBIND "build pybind switch" ON)
-option(BUILD_GRPC "build grpc switch" OFF)
+option(BUILD_GRPC "build grpc switch" ON)
 if(USE_LOG)
   add_definitions(-DUSE_LOG)
 endif()
@@ -62,22 +62,6 @@ print(GLOG_INCLUDE_DIR)
 print(GLOG_INCLUDE_PATH)
 
 # -------------------------------------------------------------------
-# use find_package to find protobuf
-# -------------------------------------------------------------------
-# list(APPEND CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX})
-# set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
-# find_package(Protobuf CONFIG REQUIRED)
-# if(Protobuf_FOUND)
-#   print(Protobuf_FOUND)
-#   print(Protobuf_INCLUDE_DIR)
-#   print(Protobuf_INCLUDES)
-#   print(Protobuf_LIBRARY)
-#   print(Protobuf_LIBRARIES)
-# else()
-#   message(FATAL_ERROR "Protobuf library not found")
-# endif()
-
-# -------------------------------------------------------------------
 # define some test or global functions
 # -------------------------------------------------------------------
 function(print_cache_vars)
@@ -101,9 +85,9 @@ function(print_cache_vars)
   print(CMAKE_SOURCE_DIR)
   print(CMAKE_BINARY_DIR)
   print(CMAKE_PREFIX_PATH)
+  print(CMAKE_SYSTEM_PREFIX_PATH)
   print(CMAKE_PROGRAM_PATH)
   print(CMAKE_MODULE_PATH)
-  print(CMAKE_SYSTEM_PREFIX_PATH)
   set(RET_VAL 100 PARENT_SCOPE)
 endfunction()
 
@@ -130,8 +114,14 @@ if(${CLANG_FORMAT} STREQUAL CLANG_FORMAT-NOTFOUND)
 else()
   file(GLOB_RECURSE FORMAT_SRCS 
     ${CMAKE_SOURCE_DIR}/inc/*.[ch]pp 
+    ${CMAKE_SOURCE_DIR}/inc/*.cc 
+    ${CMAKE_SOURCE_DIR}/inc/*.h 
     ${CMAKE_SOURCE_DIR}/src/*.[ch]pp 
-    ${CMAKE_SOURCE_DIR}/test/*.[ch]pp)
+    ${CMAKE_SOURCE_DIR}/src/*.cc 
+    ${CMAKE_SOURCE_DIR}/src/*.h 
+    ${CMAKE_SOURCE_DIR}/test/*.[ch]pp
+    ${CMAKE_SOURCE_DIR}/test/*.cc 
+    ${CMAKE_SOURCE_DIR}/test/*.h)
   message(STATUS "hcmake project's SRCS: ${FORMAT_SRCS}")
   add_custom_command(OUTPUT my_format COMMAND clang-format --verbose -i ${FORMAT_SRCS})
   # add_custom_target(format ALL DEPENDS my_format)
