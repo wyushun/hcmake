@@ -18,10 +18,10 @@ FetchContent_Declare(
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest benchmark)
 
-message(STATUS "googletest_SOURCE_DIR = ${googletest_SOURCE_DIR}")
-message(STATUS "googletest_BINARY_DIR = ${googletest_BINARY_DIR}")
-message(STATUS "benchmark_SOURCE_DIR = ${benchmark_SOURCE_DIR}")
-message(STATUS "benchmark_BINARY_DIR = ${benchmark_BINARY_DIR}")
+print(googletest_SOURCE_DIR)
+print(googletest_BINARY_DIR)
+print(benchmark_SOURCE_DIR)
+print(benchmark_BINARY_DIR)
 
 # -------------------------------------------------------------------
 # build targets according to test file's name
