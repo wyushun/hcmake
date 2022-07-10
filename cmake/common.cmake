@@ -14,8 +14,8 @@ endfunction()
 
 # use FetchContent to git clone and compile gtest and benchmark
 include(FetchContent)
-include(ExternalProject)
 set(FETCHCONTENT_QUIET off)
+# include(ExternalProject)
 
 # -------------------------------------------------------------------
 # compiler related
@@ -35,12 +35,11 @@ set(BASE_DIR ${CMAKE_SOURCE_DIR})
 set(INC_DIR ${CMAKE_SOURCE_DIR}/inc)
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_SOURCE_DIR}/test)
-# set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/3rd-party/install/)
 
 # for find_xxx functions
 # list(APPEND CMAKE_PREFIX_PATH $ENV{CONDA_PREFIX})
+# list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
 list(APPEND CMAKE_PREFIX_PATH $ENV{HOME}/.local/)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
 
 # -------------------------------------------------------------------
 # use find_library and find_path to find glog
@@ -124,7 +123,7 @@ else()
     ${CMAKE_SOURCE_DIR}/test/*.[ch]pp
     ${CMAKE_SOURCE_DIR}/test/*.cc 
     ${CMAKE_SOURCE_DIR}/test/*.h)
-  message(STATUS "hcmake project's SRCS: ${FORMAT_SRCS}")
+  print(FORMAT_SRCS)
   add_custom_command(OUTPUT my_format COMMAND clang-format --verbose -i ${FORMAT_SRCS})
   # add_custom_target(format ALL DEPENDS my_format)
   add_custom_target(format DEPENDS my_format)
