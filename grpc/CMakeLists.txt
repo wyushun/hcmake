@@ -48,7 +48,7 @@ else()
   set(GRPC_CPP_PLUGIN $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
   print(TARGET_FILE)
   print(GRPC_CPP_PLUGIN)
-  file(GENERATE OUTPUT "./generator_test.txt" CONTENT "$<TARGET_FILE:gRPC::grpc_cpp_plugin>")
+  file(GENERATE OUTPUT "./generator_debug.txt" CONTENT "$<TARGET_FILE:gRPC::grpc_cpp_plugin>")
 endif()
 
 # Proto file
