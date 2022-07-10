@@ -17,13 +17,13 @@ else()
 endif()
 
 
-set(_PROTOBUF_LIBPROTOBUF protobuf::libprotobuf)
+set(PROTOBUF_LIB protobuf::libprotobuf)
 if(CMAKE_CROSSCOMPILING)
-  find_program(_PROTOBUF_PROTOC protoc)
+  find_program(PROTOC protoc)
 else()
-  set(_PROTOBUF_PROTOC $<TARGET_FILE:protobuf::protoc>)
+  set(PROTOC $<TARGET_FILE:protobuf::protoc>)
   print(TARGET_FILE)
-  print(_PROTOBUF_PROTOC)
+  print(PROTOC)
 endif()
 
 # Find gRPC installation
@@ -40,14 +40,14 @@ else()
   message(FATAL_ERROR "gRPC library not found")
 endif()
 
-set(_REFLECTION gRPC::grpc++_reflection)
-set(_GRPC_GRPCPP gRPC::grpc++)
+set(REFLECTION_LIB gRPC::grpc++_reflection)
+set(GRPCPP_LIB gRPC::grpc++)
 if(CMAKE_CROSSCOMPILING)
-  find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
+  find_program(GRPC_CPP_PLUGIN grpc_cpp_plugin)
 else()
-  set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
+  set(GRPC_CPP_PLUGIN $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
   print(TARGET_FILE)
-  print(_GRPC_CPP_PLUGIN_EXECUTABLE)
+  print(GRPC_CPP_PLUGIN)
   file(GENERATE OUTPUT "./generator_test.txt" CONTENT "$<TARGET_FILE:gRPC::grpc_cpp_plugin>")
 endif()
 
@@ -56,34 +56,27 @@ get_filename_component(hello_proto "./hello.proto" ABSOLUTE)
 get_filename_component(my_proto_path "${hello_proto}" PATH)
 
 # Generated sources
-set(proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/hello.pb.cc")
-set(proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/hello.pb.h")
-set(grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/hello.grpc.pb.cc")
-set(grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/hello.grpc.pb.h")
+set(proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/hello.pb.cc" 
+  "${CMAKE_CURRENT_BINARY_DIR}/hello.pb.h" 
+  "${CMAKE_CURRENT_BINARY_DIR}/hello.grpc.pb.cc" 
+  "${CMAKE_CURRENT_BINARY_DIR}/hello.grpc.pb.h")
 add_custom_command(
-      OUTPUT "${proto_srcs}" "${proto_hdrs}" "${grpc_srcs}" "${grpc_hdrs}"
-      COMMAND ${_PROTOBUF_PROTOC}
-      ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
-        --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
-        -I "${my_proto_path}"
-        --plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE}"
-        "${hello_proto}"
-      DEPENDS "${hello_proto}")
-
-# Include generated *.pb.h files
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+      OUTPUT ${proto_srcs}
+      COMMAND ${PROTOC}
+      ARGS --grpc_out ${CMAKE_CURRENT_BINARY_DIR}
+        --cpp_out ${CMAKE_CURRENT_BINARY_DIR}
+        -I ${my_proto_path}
+        --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}
+        ${hello_proto}
+      DEPENDS ${hello_proto})
 
 # define proto library
-set(PROTO_LIB grpc_proto)
-add_library(${PROTO_LIB}
-  ${proto_srcs}
-  ${proto_hdrs}
-  ${grpc_srcs}
-  ${grpc_hdrs})
-target_link_libraries(${PROTO_LIB}
-  ${_REFLECTION}
-  ${_GRPC_GRPCPP}
-  ${_PROTOBUF_LIBPROTOBUF})
+set(GRPC_PROTO_LIB grpc_proto)
+add_library(${GRPC_PROTO_LIB} ${proto_srcs})
+target_link_libraries(${GRPC_PROTO_LIB}
+  ${REFLECTION_LIB}
+  ${GRPCPP_LIB}
+  ${PROTOBUF_LIB})
 
 # Targets route_guide_(client|server)
 aux_source_directory(. SRCS)
@@ -97,5 +90,5 @@ foreach(F ${SRCS})
   target_include_directories(${ELF} PRIVATE ${INC_DIR})
   target_compile_features(${ELF} PRIVATE cxx_std_11)
   target_compile_options(${ELF} PRIVATE -Wall)
-  target_link_libraries(${ELF} ${PROTO_LIB})
+  target_link_libraries(${ELF} ${GRPC_PROTO_LIB})
 endforeach()
