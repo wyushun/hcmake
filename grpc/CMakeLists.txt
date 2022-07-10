@@ -52,52 +52,50 @@ else()
 endif()
 
 # Proto file
-get_filename_component(rg_proto "./helloworld.proto" ABSOLUTE)
-get_filename_component(rg_proto_path "${rg_proto}" PATH)
+get_filename_component(hello_proto "./hello.proto" ABSOLUTE)
+get_filename_component(my_proto_path "${hello_proto}" PATH)
 
 # Generated sources
-set(rg_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/helloworld.pb.cc")
-set(rg_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/helloworld.pb.h")
-set(rg_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/helloworld.grpc.pb.cc")
-set(rg_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/helloworld.grpc.pb.h")
+set(proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/hello.pb.cc")
+set(proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/hello.pb.h")
+set(grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/hello.grpc.pb.cc")
+set(grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/hello.grpc.pb.h")
 add_custom_command(
-      OUTPUT "${rg_proto_srcs}" "${rg_proto_hdrs}" "${rg_grpc_srcs}" "${rg_grpc_hdrs}"
+      OUTPUT "${proto_srcs}" "${proto_hdrs}" "${grpc_srcs}" "${grpc_hdrs}"
       COMMAND ${_PROTOBUF_PROTOC}
       ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
         --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
-        -I "${rg_proto_path}"
+        -I "${my_proto_path}"
         --plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE}"
-        "${rg_proto}"
-      DEPENDS "${rg_proto}")
+        "${hello_proto}"
+      DEPENDS "${hello_proto}")
 
 # Include generated *.pb.h files
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-# rg_grpc_proto
-add_library(rg_grpc_proto
-  ${rg_grpc_srcs}
-  ${rg_grpc_hdrs}
-  ${rg_proto_srcs}
-  ${rg_proto_hdrs})
-target_link_libraries(rg_grpc_proto
-  ${_REFLECTION}
-  ${_GRPC_GRPCPP}
-  ${_PROTOBUF_LIBPROTOBUF})
-
-target_link_libraries(
-  rg_grpc_proto
+# define proto library
+set(PROTO_LIB grpc_proto)
+add_library(${PROTO_LIB}
+  ${proto_srcs}
+  ${proto_hdrs}
+  ${grpc_srcs}
+  ${grpc_hdrs})
+target_link_libraries(${PROTO_LIB}
   ${_REFLECTION}
   ${_GRPC_GRPCPP}
   ${_PROTOBUF_LIBPROTOBUF})
 
 # Targets route_guide_(client|server)
-foreach(_target
-  greeter_client greeter_server)
-  add_executable(${_target}
-    "${_target}.cc")
-  target_link_libraries(${_target}
-    rg_grpc_proto
-    ${_REFLECTION}
-    ${_GRPC_GRPCPP}
-    ${_PROTOBUF_LIBPROTOBUF})
+aux_source_directory(. SRCS)
+foreach(F ${SRCS})
+  get_filename_component(F_PREFIX ${F} NAME_WE)
+  set(ELF ${F_PREFIX})
+  add_executable(${ELF})
+  message(STATUS "Building ELF target: ${ELF}")
+
+  target_sources(${ELF} PRIVATE ${F})
+  target_include_directories(${ELF} PRIVATE ${INC_DIR})
+  target_compile_features(${ELF} PRIVATE cxx_std_11)
+  target_compile_options(${ELF} PRIVATE -Wall)
+  target_link_libraries(${ELF} ${PROTO_LIB})
 endforeach()
